@@ -1,6 +1,6 @@
 ﻿
 
-function MakeGif(images,dotNet) {
+export function MakeGif(images,dotNet) {
     images = document.querySelectorAll('img');
     var ag = new Animated_GIF();
     ag.setSize(320, 240);
@@ -15,7 +15,7 @@ function MakeGif(images,dotNet) {
         dotNet.invokeMethod("Preview",image);
     });
 }
-function PlayAudioFile(file) {
+export function PlayAudioFile(file) {
     var audio = new Audio(file);
     audio.load();
     audio.play();
