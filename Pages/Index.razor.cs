@@ -37,7 +37,7 @@ namespace Pam.Pages
         {
             appSettings.GifBlob = blob;
             Console.WriteLine(blob);
-            navigationManager.NavigateTo($"/preview");
+            navigationManager.NavigateTo($"/Pam/preview");
         }
 
         public async Task MakeGif()
