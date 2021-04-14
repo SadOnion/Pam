@@ -1,0 +1,26 @@
+﻿@page "/"
+
+<div class="w-100 h-50 text-center">
+    <img src="@focusedImage" />
+</div>
+<div class="bottom-panel w-100">
+
+    <div class="master">
+        @for (int i = 0; i < list.Count; i++)
+        {
+            <ImageComponent ImageSource=@(list[i].ImageUrl) Position=@i OnImageClick="ChangeFocus" />
+        }
+        <div class="add-btn">
+
+            <div class="fileUpload h-100">
+                <label class="text-center">Add new</label>
+                <InputFile OnChange="AddFile" class="upload" id="uploadBtn" />
+                @*<input id="uploadBtn" type="file" class="upload" />*@
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<div class="preview-btn" @onclick="MakeGif">Preview</div>
+

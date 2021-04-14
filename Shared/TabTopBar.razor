@@ -1,0 +1,26 @@
+﻿@using NWaves.Audio.Interfaces;
+@using NWaves.Audio.Mci;
+@inject IJSRuntime js;
+@inject NavigationManager NavigationManager;
+
+<div class="tab-bar">
+
+    <div class="tab orange" @onclick="Siema">
+        <p class="m-auto">GIF</p>
+    </div>
+    <div class="tab orange-dark" @onclick="ToSFX">
+        <p class="m-auto">SFX</p>
+    </div>
+
+</div>
+@code {
+    public async void Siema()
+    {
+        await using var jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./js/Audio.js");
+        await jsModule.InvokeVoidAsync("PlayAudioFile", "INFO_BAU_2_DIELAGE_15_00.wav");
+    }
+    public void ToSFX()
+    {
+        NavigationManager.NavigateTo("/sfx");
+    }
+}

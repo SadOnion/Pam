@@ -1,0 +1,24 @@
+﻿<div class="bottom-panel-card" @onclick=ImageClicked>
+
+
+    <div class="text-center h-100" @onclick=ImageClicked>
+        <img src=@ImageSource class="responsive-image" />
+    </div>
+    <span class="position-circle">@(Position + 1)</span>
+    <span class="delete-circle">X</span>
+
+</div>
+@code {
+    [Parameter]
+    public int Position { get; set; }
+    [Parameter]
+    public string ImageSource { get; set; }
+    [Parameter]
+    public EventCallback<int> OnImageClick { get; set; }
+
+
+    public async Task ImageClicked()
+    {
+        await OnImageClick.InvokeAsync(Position);
+    }
+}
