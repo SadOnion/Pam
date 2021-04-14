@@ -43,13 +43,13 @@ namespace Pam.Pages
         public async Task MakeGif()
         {
             var dotNetObjRef = DotNetObjectReference.Create(this);
-            await using var jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./js/Audio.js");
+            //await using var jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./js/Audio.js");
             List<byte[]> urls = new List<byte[]>();
             foreach (var item in list)
             {
                 urls.Add(item.ImageData);
             }
-            await jsModule.InvokeVoidAsync("MakeGif", urls,dotNetObjRef);
+            await js.InvokeVoidAsync("MakeGif", urls,dotNetObjRef);
         }
 
         public void ChangeFocus(int position)

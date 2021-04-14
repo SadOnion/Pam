@@ -16,8 +16,8 @@
 @code {
     public async void Siema()
     {
-        await using var jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./js/Audio.js");
-        await jsModule.InvokeVoidAsync("PlayAudioFile", "INFO_BAU_2_DIELAGE_15_00.wav");
+        //await using var jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./js/Audio.js");
+        await js.InvokeVoidAsync("PlayAudioFile", "INFO_BAU_2_DIELAGE_15_00.wav");
     }
     public void ToSFX()
     {
