@@ -1,25 +1,32 @@
-﻿@using NWaves.Audio.Interfaces;
-@using NWaves.Audio.Mci;
-@inject IJSRuntime js;
+﻿@inject IJSRuntime js;
 @inject NavigationManager NavigationManager;
-
 <div class="tab-bar">
 
-    <div class="tab orange" @onclick="Siema">
+    <div class="@GifCssClass" @onclick="GifClicked">
         <p class="m-auto">GIF</p>
     </div>
-    <div class="tab orange-dark" @onclick="ToSFX">
+    <div class="@SfxCssClass" @onclick="SfxClicked">
         <p class="m-auto">SFX</p>
     </div>
 
 </div>
 @code {
-    public async void Siema()
+
+    [Parameter]
+    public bool GifModeSelected {get; set;}
+    public string GifCssClass
     {
-        //await using var jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./js/Audio.js");
-        await js.InvokeVoidAsync("PlayAudioFile", "INFO_BAU_2_DIELAGE_15_00.wav");
+        get => GifModeSelected ? "tab orange" : "tab cyan-dark";
     }
-    public void ToSFX()
+    public string SfxCssClass
+    {
+        get => GifModeSelected ? "tab orange-dark" : "tab cyan";
+    }
+    public void GifClicked()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+    public void SfxClicked()
     {
         NavigationManager.NavigateTo("/sfx");
     }

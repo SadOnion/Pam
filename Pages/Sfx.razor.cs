@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Pam.Pages
 {
-    public partial class Index : ComponentBase
+    public partial class Sfx : ComponentBase
     {
         [Inject]
         public IJSRuntime js { get; set; }
@@ -20,9 +20,13 @@ namespace Pam.Pages
         private List<Image> list = new List<Image>();
         int focusedIndex = -1;
         string focusedImage = string.Empty;
-
+        protected override void OnAfterRender(bool firstRender)
+        {
+            appSettings.GifModeSelected = false;
+        }
         protected override void OnInitialized()
         {
+            
             if(appSettings.Images.Count > 0)
             {
                 list = appSettings.Images;
@@ -30,17 +34,16 @@ namespace Pam.Pages
         }
         public async Task AddFile(InputFileChangeEventArgs args)
         {
-            IBrowserFile imgFile = args.File;
-            var buffers = new byte[imgFile.Size];
-            await imgFile.OpenReadStream(maxAllowedSize: 2097152).ReadAsync(buffers);
-            string imageType = imgFile.ContentType;
-            Image img = new Image() { ImageData = buffers, ImageType = imageType };
+            IBrowserFile audioFile = args.File;
+            var buffers = new byte[audioFile.Size];
+            await audioFile.OpenReadStream(maxAllowedSize: 2097152).ReadAsync(buffers);
+            string audioType = audioFile.ContentType;
+            var base64 = Convert.ToBase64String(buffers);
+            string blob = $"base64,{base64}";
+            Console.WriteLine(audioType);
+            Console.WriteLine(blob);
+            await js.InvokeVoidAsync("PlayAudioFile",blob,audioType);
 
-            Console.WriteLine(img.ImageType);
-            Console.WriteLine(img.ImageData.Length);
-            Console.WriteLine(img.ImageUrl);
-            list.Add(img);
-            ChangeFocus(list.Count-1);
         }
         [JSInvokable]
         public void Preview(string blob)

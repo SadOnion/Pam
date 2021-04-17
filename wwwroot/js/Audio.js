@@ -1,12 +1,15 @@
 ﻿
 
-function MakeGif(images,dotNet) {
+function MakeGif(images,delays,dotNet) {
     images = document.querySelectorAll('img');
     var ag = new Animated_GIF();
     ag.setSize(320, 240);
+    for (var i = 0; i < delays.length; i++) {
+        delays[i]*=0.1;
+    }
     //100 = 1 sec
     for (var i = 1; i < images.length; i++) {
-        ag.addFrame(images[i],50);
+        ag.addFrame(images[i],delays[i-1]);
     }
 
 
@@ -15,12 +18,29 @@ function MakeGif(images,dotNet) {
         dotNet.invokeMethod("Preview",image);
     });
 }
-function PlayAudioFile(file) {
+function PlayAudioFile(dataURI,type) {
+    var binary = convertDataURIToBinary(dataURI);
+    var blob = new Blob([binary], {type: type});
+    var file = window.URL.createObjectURL(blob);
     var audio = new Audio(file);
     audio.load();
     audio.play();
 }
 
+var BASE64_MARKER = ';base64,';
+
+function convertDataURIToBinary(dataURI) {
+  var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+  var base64 = dataURI.substring(base64Index);
+  var raw = window.atob(base64);
+  var rawLength = raw.length;
+  var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+  for(i = 0; i < rawLength; i++) {
+    array[i] = raw.charCodeAt(i);
+  }
+  return array;
+}
 
 
 

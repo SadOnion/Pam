@@ -5,10 +5,15 @@ html, body {
     text-decoration:none;
 }
 .add-btn {
-    width: 33%;
-    height: 75%;
-    background-color:aqua;
-    display:inline-block;
+    cursor:pointer;
+    display: flex;
+    width: 18vh;
+    margin: 1vh 5%;
+    height: 18vh;
+    background-color: aqua;
+    display: inline-block;
+    flex-shrink: 0;
+    min-height: min-content;
 }
 .fileUpload {
     position: relative;
@@ -125,41 +130,50 @@ img{
     background: rgb(2,0,36);
 }
 .orange {
-    background-color: #FF6C3C;
+    background-color: #FF6C3C !important;
 }
 .orange-dark {
     background-color:#C02E00 ;
 }
 .cyan {
-    background-color: #93EFD8;
+    background-color: #93EFD8 !important;
 }
 .cyan-dark {
     background-color: #00C691;
 }
 .red-gradient {
-    background: linear-gradient(-45deg, rgba(255,81,23,1) 0%, rgba(255,58,166,1) 90%, rgba(255,54,187,1) 100%);
+    background: linear-gradient(-45deg, rgba(255,81,23,1) 0%, rgba(255,58,166,1) 90%, rgba(255,54,187,1) 100%)!important;
 }
 .blue-gradient {
-    background: linear-gradient(-45deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 9%, rgba(0,212,255,1) 100%);
+    background: linear-gradient(-45deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 9%, rgba(0,212,255,1) 100%)!important;
 }
 .bottom-panel {
-    position:relative;
+    
     border-top: solid 1vh black;
-    height: 35vh;
+    height: 25vh;
+    display: flex;
+    flex:1;
+    flex-wrap:nowrap;
+    justify-content: stretch;
+    align-items:center;
     overflow-x: auto;
-    overflow-y: auto;
     text-decoration: none !important;
-    white-space: nowrap;
+    
     margin:auto;
 }
 .bottom-panel-card {
+    cursor:pointer;
     position: relative;
-    margin:2.5%;
-    width: 33%;
-    display: inline-block;
+    margin: 1vh 5%;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    height: 75%;
-    background-color: lime;
+    width: 18vh;
+    flex-shrink: 0;
+    min-height: min-content;
+    height: 18vh;
+    background-color: #FF6C3C;
+    border: solid 5px black;
     text-decoration: none !important;
 }
 .preview-btn {
@@ -173,10 +187,13 @@ img{
     }
 .position-circle {
     position: absolute;
-    width:10%;
-    top:-5%;
-    left:-5%;
-    padding-bottom:5%;
+    width:5vh;
+    height:5vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    top:-2vh;
+    left:-2vh;
     border-radius: 50%;
     text-align:center;
     background-color: red;
@@ -184,25 +201,52 @@ img{
 }
 .delete-circle {
     position: absolute;
-    width: 10%;
-    top: -5%;
-    right: -5%;
-    padding-bottom: 5%;
+    width: 5vh;
+    height: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: -2vh;
+    right: -2vh;
     border-radius: 50%;
     text-align: center;
     background-color: red;
     color: white;
 }
-
+    .delete-circle:hover {
+        background-color: darkred;
+        cursor:pointer;
+    }
+.position-circle.focused{
+    background-color: darkred;
+}
 .responsive-image {
-    width: auto;
-    height: auto;
-    max-width: 75%;
-    max-height: 75%;
-    padding: 5%;
-    background-repeat: no-repeat;
+    background-repeat:no-repeat;
+    image-resolution:snap;
 }
 .master{
     height:75%;
 
+}
+.settings-panel{
+    display:flex;
+    justify-content:center;
+    height:10vh;
+    flex-wrap:nowrap;
+}
+.image-display{
+    height: 50vh;
+}
+.input-field{
+    margin:auto;
+    height:5vh;
+    width:25vw;
+}
+.play-btn {
+    cursor: pointer;
+    transform: scale(0.8);
+}
+.play-btn:hover{
+    transition-duration:.5s;
+    transform: scale(0.9);
 }

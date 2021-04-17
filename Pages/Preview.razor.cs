@@ -24,6 +24,7 @@ namespace Pam.Pages
         public void BackToEdit()
         {
             navigation.NavigateTo("/");
+            //navigation.NavigateTo("/Pam/");
         }
 
         public async Task Save()
