@@ -48,8 +48,8 @@ namespace Pam.Pages
             appSettings.GifBlob = blob;
             appSettings.Images = list;
             Console.WriteLine(blob);
-            //navigationManager.NavigateTo($"/Pam/preview");
-            navigationManager.NavigateTo($"/preview");
+            navigationManager.NavigateTo($"/Pam/preview");
+            //navigationManager.NavigateTo($"/preview");
         }
 
         public async Task MakeGif()
