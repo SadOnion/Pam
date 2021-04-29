@@ -26,6 +26,232 @@ function PlayAudioFile(dataURI,type) {
     audio.load();
     audio.play();
 }
+function AudioDuration(dotnet,src) {
+    var binary = convertDataURIToBinary(src);
+    var blob = new Blob([binary], {type: "audio/wav"});
+    var file = window.URL.createObjectURL(blob);
+    var audio = new Audio(file);
+    audio.src = file;
+    audio.load();
+    alert(audio.duration);
+    return audio.duration;
+}
+
+
+     //window.onload = function() {
+        
+     //   loadWav(audioFileUrl1, audioFileUrl2); //Load wavs from url
+
+     //   function loadWav(url1,url2){
+            
+     //       var arrBytesWav1, arrBytesWav2;
+            
+     //       fetch(url1)
+     //       .then(function(response) { return response.blob(); })
+     //       .then(function(blob) {
+                
+     //           var reader = new FileReader();
+     //           reader.readAsArrayBuffer(blob);
+     //           reader.addEventListener("loadend", function() {
+     //               arrBytesWav1 = reader.result;
+     //           });
+                    
+     //           return fetch(url2); //Return the second url as a Promise.
+     //       })
+     //       //Second load 
+     //       .then(function(response) { return response.blob(); })
+     //       .then(function(blob) {
+                
+     //           var reader = new FileReader();
+     //           reader.readAsArrayBuffer(blob);
+     //           reader.addEventListener("loadend", function() {
+     //               arrBytesWav2 = reader.result;
+     //               combineWavsBuffers( arrBytesWav1, arrBytesWav2 ); //Combine original wav buffer and play
+     //           });
+
+     //       })          
+     //       .catch( function(error) {
+     //           alert('Error wav loading: ' + error.message);
+     //       });
+
+     //   }
+        
+        
+        //Combine two audio .wav buffers and assign to audio control and play it.
+        function combineWavsBuffers(buffer1, buffer2,dotnet) {
+                
+                //Combine array bytes of original wavs buffers
+                var tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
+                tmp.set( new Uint8Array(buffer1), 0 );
+                tmp.set( new Uint8Array(buffer2), buffer1.byteLength );
+                getAudioData();
+                //Get buffer1 audio data to create the new combined wav
+                //var audioData = getAudioData.WavHeader.readHeader(new DataView(new Uint8Array(buffer1)));
+                //console.log('Audio Data: ', audioData); 
+    
+    
+                //Send combined buffer and send audio data to create the audio data of combined 
+                var arrBytesFinal = getWavBytes( tmp, {
+                  isFloat: false       // floating point or 16-bit intege
+                })              
+                    
+                //Create a Blob as Base64 Raw data with audio/wav type
+                var myBlob = new Blob( [arrBytesFinal] , { type : 'audio/wav; codecs=MS_PCM' });
+                var combineBase64Wav;
+                var readerBlob = new FileReader();
+                readerBlob.addEventListener("loadend", function() {
+                    combineBase64Wav = readerBlob.result.toString();
+                    dotnet.invokeMethod("SfxBlob",combineBase64Wav);
+                    PlayAudioFile(combineBase64Wav);
+                });
+                readerBlob.readAsDataURL(myBlob);
+                alert(combineBase64Wav);
+
+    
+        }
+        
+            
+        
+        //Other functions //////////////////////////////////////////////////////////////
+         
+        // Returns Uint8Array of WAV bytes
+        function getWavBytes(buffer, options) {
+          const type = options.isFloat ? Float32Array : Uint16Array
+          const numFrames = buffer.byteLength / type.BYTES_PER_ELEMENT
+        
+          const headerBytes = getWavHeader(Object.assign({}, options, { numFrames }))
+          const wavBytes = new Uint8Array(headerBytes.length + buffer.byteLength);
+        
+          // prepend header, then add pcmBytes
+          wavBytes.set(headerBytes, 0)
+          wavBytes.set(new Uint8Array(buffer), headerBytes.length)
+        
+          return wavBytes
+        }
+        
+        // adapted from https://gist.github.com/also/900023
+        // returns Uint8Array of WAV header bytes
+        function getWavHeader(options) {
+          const numFrames =      options.numFrames
+          const numChannels =    options.numChannels || 2
+          const sampleRate =     options.sampleRate || 44100
+          const bytesPerSample = options.isFloat? 4 : 2
+          const format =         options.isFloat? 3 : 1
+        
+          const blockAlign = numChannels * bytesPerSample
+          const byteRate = sampleRate * blockAlign
+          const dataSize = numFrames * blockAlign
+        
+          const buffer = new ArrayBuffer(44)
+          const dv = new DataView(buffer)
+        
+          let p = 0
+        
+          function writeString(s) {
+            for (let i = 0; i < s.length; i++) {
+              dv.setUint8(p + i, s.charCodeAt(i))
+            }
+            p += s.length
+          }
+        
+          function writeUint32(d) {
+            dv.setUint32(p, d, true)
+            p += 4
+          }
+        
+          function writeUint16(d) {
+            dv.setUint16(p, d, true)
+            p += 2
+          }
+        
+          writeString('RIFF')              // ChunkID
+          writeUint32(dataSize + 36)       // ChunkSize
+          writeString('WAVE')              // Format
+          writeString('fmt ')              // Subchunk1ID
+          writeUint32(16)                  // Subchunk1Size
+          writeUint16(format)              // AudioFormat
+          writeUint16(numChannels)         // NumChannels
+          writeUint32(sampleRate)          // SampleRate
+          writeUint32(byteRate)            // ByteRate
+          writeUint16(blockAlign)          // BlockAlign
+          writeUint16(bytesPerSample * 8)  // BitsPerSample
+          writeString('data')              // Subchunk2ID
+          writeUint32(dataSize)            // Subchunk2Size
+        
+          return new Uint8Array(buffer)
+        }
+
+
+        function getAudioData(){
+    
+        
+            function WavHeader() {
+                this.dataOffset = 0;
+                this.dataLen = 0;
+                this.channels = 0;
+                this.sampleRate = 0;
+            }
+            
+            function fourccToInt(fourcc) {
+                return fourcc.charCodeAt(0) << 24 | fourcc.charCodeAt(1) << 16 | fourcc.charCodeAt(2) << 8 | fourcc.charCodeAt(3);
+            }
+            
+            WavHeader.RIFF = fourccToInt("RIFF");
+            WavHeader.WAVE = fourccToInt("WAVE");
+            WavHeader.fmt_ = fourccToInt("fmt ");
+            WavHeader.data = fourccToInt("data");
+            
+            WavHeader.readHeader = function (dataView) {
+                var w = new WavHeader();
+            
+                var header = dataView.getUint32(0, false);
+                if (WavHeader.RIFF != header) {
+                    return;
+                }
+                var fileLen = dataView.getUint32(4, true);
+                if (WavHeader.WAVE != dataView.getUint32(8, false)) {
+                    return;
+                }
+                if (WavHeader.fmt_ != dataView.getUint32(12, false)) {
+                    return;
+                }
+                var fmtLen = dataView.getUint32(16, true);
+                var pos = 16 + 4;
+                switch (fmtLen) {
+                    case 16:
+                    case 18:
+                        w.channels = dataView.getUint16(pos + 2, true);
+                        w.sampleRate = dataView.getUint32(pos + 4, true);
+                        break;
+                    default:
+                        throw 'extended fmt chunk not implemented';
+                }
+                pos += fmtLen;
+                var data = WavHeader.data;
+                var len = 0;
+                while (data != header) {
+                    header = dataView.getUint32(pos, false);
+                    len = dataView.getUint32(pos + 4, true);
+                    if (data == header) {
+                        break;
+                    }
+                    pos += (len + 8);
+                }
+                w.dataLen = len;
+                w.dataOffset = pos + 8;
+                return w;
+            };
+        
+            getAudioData.WavHeader = WavHeader;
+        
+        }
+        
+        //getAudioData();
+
+        
+        
+    //};//Window onLoad
+
 
 var BASE64_MARKER = ';base64,';
 

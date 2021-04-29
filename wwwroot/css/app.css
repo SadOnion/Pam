@@ -47,13 +47,13 @@ html, body {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #FF6C3C;
+    background: violet;
     border-radius: 10px;
 }
 
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
-        background: #b30000;
+        background: purple;
     }
 a, .btn-link {
     color: #0366d6;
@@ -177,7 +177,7 @@ img{
     text-decoration: none !important;
 }
 .preview-btn {
-    font-size: 3vh;
+    font-size: 3.33vh;
     text-align: center;
     background: linear-gradient(0deg, rgba(255,81,23,1) 0%, rgba(255,54,187,1) 100%);
 }
@@ -230,7 +230,8 @@ img{
 }
 .settings-panel{
     display:flex;
-    justify-content:center;
+    justify-content:left;
+    align-items:flex-start;
     height:10vh;
     flex-wrap:nowrap;
 }
@@ -249,4 +250,7 @@ img{
 .play-btn:hover{
     transition-duration:.5s;
     transform: scale(0.9);
+}
+.btn-panel{
+    margin-top: 4.5vh;
 }

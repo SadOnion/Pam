@@ -1,4 +1,4 @@
-﻿<div class="bottom-panel-card" >
+﻿<div class="bottom-panel-card @(SfxMode? "cyan":string.Empty)" >
 
 
 
@@ -19,7 +19,8 @@
     public bool isFocused { get; set; }
     [Parameter]
     public EventCallback<int> DeleteClick { get; set; }
-
+    [Parameter]
+    public bool SfxMode {get; set;}
     private string CssClass => isFocused ? "position-circle focused" : "position-circle";
 
     public async Task ImageClicked()

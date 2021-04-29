@@ -1,42 +1,45 @@
 ﻿@page "/"
+<div class="red-gradient vh-100 vw-100">
 
-<div class="w-100 image-display text-center">
-    <img src="@focusedImage" />
-</div>
-
-
-<div class="settings-panel">
-    @if (focusedIndex > -1)
-    {
-        <input type="number" min="1" max="@list.Count" @onchange="ChangePosition" id="positionInput" class="input-field" value="@(focusedIndex+1)" />
-        <input type="number" id="delayInput" @onchange="ChangeDelay" class="input-field" value="@list[focusedIndex].DelayInMs" />
-    }
-</div>
-<div class="bottom-panel w-100">
-
-
-    @for (int i = 0; i < list.Count; i++)
-    {
-        if (i == focusedIndex)
-        {
-
-            <ImageComponent DeleteClick="DeleteImage" ImageSource=@(list[i].ImageUrl) Position=@i OnImageClick="ChangeFocus" isFocused="true" /> }
-        else
-        {
-            <ImageComponent DeleteClick="DeleteImage" ImageSource=@(list[i].ImageUrl) Position=@i OnImageClick="ChangeFocus" />
-        }
-    }
-    <div class="add-btn">
-
-        <div class="fileUpload h-100">
-            <label class="text-center">Add new</label>
-            <InputFile OnChange="AddFile" class="upload" id="uploadBtn" accept="image/*" />
-            @*<input id="uploadBtn" type="file" class="upload" />*@
-        </div>
-
+    <TabTopBar GifModeSelected="true"/>
+    <div class="w-100 image-display text-center">
+        <img src="@focusedImage" />
     </div>
 
 
-</div>
-<div class="preview-btn" @onclick="MakeGif">Preview</div>
+    <div class="settings-panel">
+        @if (focusedIndex > -1)
+        {
+            <input type="number" min="1" max="@list.Count" @onchange="ChangePosition" id="positionInput" class="input-field" value="@(focusedIndex+1)" />
+            <input type="number" id="delayInput" @onchange="ChangeDelay" class="input-field" value="@list[focusedIndex].DelayInMs" />
+        }
+    </div>
+    <div class="bottom-panel w-100">
 
+
+        @for (int i = 0; i < list.Count; i++)
+        {
+            if (i == focusedIndex)
+            {
+
+                <ImageComponent DeleteClick="DeleteImage" ImageSource=@(list[i].ImageUrl) Position=@i OnImageClick="ChangeFocus" isFocused="true" /> }
+            else
+            {
+                <ImageComponent DeleteClick="DeleteImage" ImageSource=@(list[i].ImageUrl) Position=@i OnImageClick="ChangeFocus" />
+            }
+        }
+        <div class="add-btn">
+
+            <div class="fileUpload h-100">
+                <label class="text-center">Add new</label>
+                <InputFile OnChange="AddFile" class="upload" id="uploadBtn" accept="image/*" />
+                @*<input id="uploadBtn" type="file" class="upload" />*@
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="preview-btn" @onclick="MakeGif">Preview</div>
+
+</div>

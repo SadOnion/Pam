@@ -81,6 +81,7 @@ namespace Pam.Pages
         {
             int newPosition = int.Parse((string)args.Value);
             Image img = list[focusedIndex];
+            newPosition = Math.Clamp(newPosition,1,list.Count);
             list.RemoveAt(focusedIndex);
             list.Insert(newPosition - 1, img);
             ChangeFocus(newPosition - 1);

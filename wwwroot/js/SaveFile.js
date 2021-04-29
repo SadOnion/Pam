@@ -1,7 +1,7 @@
 ﻿
-function SaveFile(file) {
+function SaveFile(file,name) {
     var link = document.createElement('a');
-    link.download = "Test.gif";
+    link.download = name;
     link.href = file;
     document.body.appendChild(link);
     link.click();

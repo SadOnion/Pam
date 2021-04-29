@@ -29,7 +29,7 @@ namespace Pam.Pages
 
         public async Task Save()
         {
-            await js.InvokeVoidAsync("SaveFile",GifBlob);
+            await js.InvokeVoidAsync("SaveFile",GifBlob,"Gif.gif");
         }
     }
 }

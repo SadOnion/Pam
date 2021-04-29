@@ -1,42 +1,51 @@
 ﻿@page "/sfx"
+<div class="blue-gradient vh-100 vw-100">
 
-<div class="w-100 image-display text-center">
-    <img class="play-btn" src="/images/play.png" />
-</div>
-
-
-<div class="settings-panel">
-    @if (focusedIndex > -1)
-    {
-        <input type="number" min="1" max="@list.Count" @onchange="ChangePosition" id="positionInput" class="input-field" value="@(focusedIndex+1)" />
-        <input type="number" id="delayInput" @onchange="ChangeDelay" class="input-field" value="@list[focusedIndex].DelayInMs" />
-    }
-</div>
-<div class="bottom-panel w-100">
-
-
-    @for (int i = 0; i < list.Count; i++)
-    {
-        if (i == focusedIndex)
-        {
-
-            <ImageComponent DeleteClick="DeleteImage" ImageSource=@(list[i].ImageUrl) Position=@i OnImageClick="ChangeFocus" isFocused="true" /> }
-        else
-        {
-            <ImageComponent DeleteClick="DeleteImage" ImageSource=@(list[i].ImageUrl) Position=@i OnImageClick="ChangeFocus" />
-        }
-    }
-    <div class="add-btn cyan">
-
-        <div class="fileUpload h-100 cyan">
-            <label class="text-center">Add new</label>
-            <InputFile  OnChange="AddFile" class="upload" id="uploadBtn" accept="audio/*"/>
-            @*<input id="uploadBtn" type="file" class="upload" />*@
-        </div>
-
+    <TabTopBar />
+    <div class="w-100 image-display text-center">
+        @if(focusedIndex > -1)
+            {
+            <img class="play-btn" src="/images/play.png" @onclick="Play"/>
+            }
     </div>
 
 
-</div>
-<div class="preview-btn blue-gradient" @onclick="MakeGif">Preview</div>
+    <div class="settings-panel">
+        @if (focusedIndex > -1)
+        {
+            <input type="number" min="1" max="@audioList.Count" @onchange="ChangePosition" id="positionInput" class="input-field" value="@(focusedIndex+1)" />
+            <div class="input-field mb-4 ">
+                <label for="customRange1" class="text-white ">@Tempo</label>
+                <input type="range" min="0.1" max="2.0" step="0.1" class="custom-range" id="customRange1" @onchange="ChangeTempo">
+            </div>
+        }
+    </div>
+    <div class="bottom-panel w-100">
 
+
+        @for (int i = 0; i < audioList.Count; i++)
+        {
+            if (i == focusedIndex)
+            {
+
+                <ImageComponent DeleteClick="DeleteImage" ImageSource="images/play.png" Position=@i OnImageClick="ChangeFocus" isFocused="true" SfxMode="true" /> }
+            else
+            {
+                <ImageComponent DeleteClick="DeleteImage" ImageSource="images/play.png" Position=@i OnImageClick="ChangeFocus" SfxMode="true"/>
+            }
+        }
+        <div class="add-btn cyan">
+
+            <div class="fileUpload h-100 cyan">
+                <label class="text-center">Add new</label>
+                <InputFile OnChange="AddFile" class="upload" id="uploadBtn" accept="audio/wav" />
+                @*<input id="uploadBtn" type="file" class="upload" />*@
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="preview-btn blue-gradient" @onclick="Preview">Preview</div>
+
+</div>

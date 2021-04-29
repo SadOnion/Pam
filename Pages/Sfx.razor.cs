@@ -4,6 +4,7 @@ using Microsoft.JSInterop;
 using Pam.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,9 +18,10 @@ namespace Pam.Pages
         NavigationManager navigationManager { get; set; }
         [Inject]
         public AppSettings appSettings { get; set; }
-        private List<Image> list = new List<Image>();
+        public float Tempo { get; set; }
+        private List<Audio> audioList  = new List<Audio>();
         int focusedIndex = -1;
-        string focusedImage = string.Empty;
+        string focusedAudio = string.Empty;
         protected override void OnAfterRender(bool firstRender)
         {
             appSettings.GifModeSelected = false;
@@ -27,10 +29,19 @@ namespace Pam.Pages
         protected override void OnInitialized()
         {
             
-            if(appSettings.Images.Count > 0)
+            if(appSettings.Audios.Count > 0)
             {
-                list = appSettings.Images;
+                audioList = appSettings.Audios;
             }
+            Tempo = 1f;
+        }
+        public void ChangeTempo(ChangeEventArgs args)
+        {
+            Console.WriteLine(args.Value);
+            string val = (string)args.Value;
+            float newValue = float.Parse(val.Replace('.',','));
+            newValue = MathF.Max(MathF.Min(2f,newValue),0.1f);
+            Tempo = newValue;
         }
         public async Task AddFile(InputFileChangeEventArgs args)
         {
@@ -39,63 +50,57 @@ namespace Pam.Pages
             await audioFile.OpenReadStream(maxAllowedSize: 2097152).ReadAsync(buffers);
             string audioType = audioFile.ContentType;
             var base64 = Convert.ToBase64String(buffers);
-            string blob = $"base64,{base64}";
+            string blob = $"data:{audioType};base64,{base64}";
             Console.WriteLine(audioType);
             Console.WriteLine(blob);
-            await js.InvokeVoidAsync("PlayAudioFile",blob,audioType);
-
-        }
-        [JSInvokable]
-        public void Preview(string blob)
-        {
-            appSettings.GifBlob = blob;
-            appSettings.Images = list;
-            Console.WriteLine(blob);
-            //navigationManager.NavigateTo($"/Pam/preview");
-            navigationManager.NavigateTo($"/preview");
-        }
-
-        public async Task MakeGif()
-        {
-            var dotNetObjRef = DotNetObjectReference.Create(this);
-            //await using var jsModule = await js.InvokeAsync<IJSObjectReference>("import", "./js/Audio.js");
-            List<byte[]> urls = new List<byte[]>();
-            foreach (var item in list)
+            Audio audio = new Audio()
             {
-                urls.Add(item.ImageData);
-            }
-            List<int> delays = new List<int>();
-            foreach (var item in list)
-            {
-                delays.Add(item.DelayInMs);
-            }
-            await js.InvokeVoidAsync("MakeGif", urls,delays, dotNetObjRef);
+                Blob = blob,
+                ByteArray = buffers
+            };
+            audioList.Add(audio);
         }
-        public void ChangeDelay(ChangeEventArgs args)
+        public void Preview(EventArgs args)
         {
-            list[focusedIndex].DelayInMs = int.Parse((string)args.Value);
+            MakeSfx();
+            appSettings.Audios = audioList;
+            
+            //navigationManager.NavigateTo($"/Pam/previewSfx");
+            navigationManager.NavigateTo($"/previewSfx");
         }
+
+        public void MakeSfx()
+        {
+            string combinedSfx = WaveCombiner.Combine(audioList.Select(x => x.ByteArray).ToList(),Tempo);
+            appSettings.SfxBlob = $"data:audio/wav;base64,{combinedSfx}";
+        }
+
         public void ChangeFocus(int index)
         {
             focusedIndex = index;
-            focusedImage = list[index].ImageUrl;
+            focusedAudio = audioList[index].Blob;
+        }
+        public async Task Play(EventArgs args)
+        {
+            await js.InvokeVoidAsync("PlayAudioFile",audioList[focusedIndex].Blob,"audio/wav");
         }
         public void ChangePosition(ChangeEventArgs args)
         {
             int newPosition = int.Parse((string)args.Value);
-            Image img = list[focusedIndex];
-            list.RemoveAt(focusedIndex);
-            list.Insert(newPosition - 1, img);
+            newPosition = Math.Clamp(newPosition,1,audioList.Count);
+            Audio audio = audioList[focusedIndex];
+            audioList.RemoveAt(focusedIndex);
+            audioList.Insert(newPosition - 1, audio);
             ChangeFocus(newPosition - 1);
         }
         public void DeleteImage(int position)
         {
-            list.RemoveAt(position);
+            audioList.RemoveAt(position);
             if (position == focusedIndex)
             {
-
+                
                 focusedIndex = -1;
-                focusedImage = string.Empty;
+                focusedAudio = string.Empty;
             }
         }
     }
