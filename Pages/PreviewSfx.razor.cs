@@ -25,8 +25,8 @@ namespace Pam.Pages
         }
         public void BackToEdit()
         {
-            navigation.NavigateTo("/previewSfx");
-            //navigation.NavigateTo("/Pam/previewSfx");
+            //navigation.NavigateTo("/previewSfx");
+            navigation.NavigateTo("/Pam/previewSfx");
         }
         public async Task Save()
         {

@@ -65,8 +65,8 @@ namespace Pam.Pages
             MakeSfx();
             appSettings.Audios = audioList;
             
-            //navigationManager.NavigateTo($"/Pam/previewSfx");
-            navigationManager.NavigateTo($"/previewSfx");
+            navigationManager.NavigateTo($"/Pam/previewSfx");
+            //navigationManager.NavigateTo($"/previewSfx");
         }
 
         public void MakeSfx()
