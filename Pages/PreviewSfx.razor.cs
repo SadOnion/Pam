@@ -37,6 +37,7 @@ namespace Pam.Pages
         public async Task Save()
         {
             await js.InvokeVoidAsync("SaveFile", appSettings.SfxBlob, $"{textEdit.Text}.wav");
+            modalRef.Hide();
         }
 
         public async Task Play(EventArgs args)

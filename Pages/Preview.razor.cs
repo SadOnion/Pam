@@ -41,6 +41,7 @@ namespace Pam.Pages
         public async Task Save()
         {
             await js.InvokeVoidAsync("SaveFile",GifBlob,$"{textEdit.Text}.gif");
+            modalRef.Hide();
         }
     }
 }
