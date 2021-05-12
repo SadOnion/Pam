@@ -27,8 +27,25 @@
     </div>
     <div class="btn-panel">
 
-    <div class="preview-btn" @onclick="BackToEdit">Edit</div>
-    <div class="preview-btn" @onclick="Save">Save</div>
+        <div class="preview-btn" @onclick="BackToEdit">Edit</div>
+        <div class="preview-btn" @onclick="ShowModal">Save</div>
     </div>
-
+    <Modal @ref="modalRef">
+        <ModalContent Centered="true">
+            <ModalHeader>
+                <ModalTitle>Save file</ModalTitle>
+                <CloseButton />
+            </ModalHeader>
+            <ModalBody>
+                <Field>
+                    <FieldLabel>File name</FieldLabel>
+                    <TextEdit @ref="textEdit" Placeholder="Enter file name..." />
+                </Field>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary" Clicked="HideModal">Cancel</Button>
+                <Button Color="Color.Primary" Clicked="Save" >Save File</Button>
+            </ModalFooter>
+        </ModalContent>
+    </Modal>
 </div>

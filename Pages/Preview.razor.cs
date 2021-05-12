@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Blazorise;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Pam.Model;
 using System;
@@ -16,11 +17,21 @@ namespace Pam.Pages
         public NavigationManager navigation {get; set;}
         [Inject]
         public IJSRuntime js { get; set; }
+        private Modal modalRef;
+        private TextEdit textEdit;
         protected override void OnInitialized()
         {
             GifBlob = appSettings.GifBlob;
         }
 
+        public void ShowModal()
+        {
+            modalRef.Show();
+        }
+        public void HideModal()
+        {
+            modalRef.Hide();
+        }
         public void BackToEdit()
         {
             //navigation.NavigateTo("/");
@@ -29,7 +40,7 @@ namespace Pam.Pages
 
         public async Task Save()
         {
-            await js.InvokeVoidAsync("SaveFile",GifBlob,"Gif.gif");
+            await js.InvokeVoidAsync("SaveFile",GifBlob,$"{textEdit}.gif");
         }
     }
 }

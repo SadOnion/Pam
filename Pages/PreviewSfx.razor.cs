@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Blazorise;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Pam.Model;
 using System;
@@ -18,6 +19,11 @@ namespace Pam.Pages
         public NavigationManager navigation { get; set; }
 
         public TimeSpan Duration { get; set; }
+        private Modal modalRef;
+        private TextEdit textEdit;
+        public void ShowModal() => modalRef.Show();
+        public void HideModal() => modalRef.Hide();
+
         protected override void OnInitialized()
         {
             float secs = (float)appSettings.Audios.SelectMany(x => x.ByteArray).Count() / ((44100 * 16 * 1) / 8);
@@ -30,12 +36,12 @@ namespace Pam.Pages
         }
         public async Task Save()
         {
-            await js.InvokeVoidAsync("SaveFile", appSettings.SfxBlob);
+            await js.InvokeVoidAsync("SaveFile", appSettings.SfxBlob, $"{textEdit.Text}.wav");
         }
 
         public async Task Play(EventArgs args)
         {
-            await js.InvokeVoidAsync("PlayAudioFile", appSettings.SfxBlob, "Sfx.wav");
+            await js.InvokeVoidAsync("PlayAudioFile", appSettings.SfxBlob, "audio/wav");
         }
     }
 }

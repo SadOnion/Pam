@@ -4,6 +4,9 @@ using Pam.Model;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Blazorise;
+using Blazorise.Bootstrap;
+
 
 namespace Pam
 {
@@ -15,6 +18,10 @@ namespace Pam
             builder.RootComponents.Add<App>("#app");
             builder.Services.AddSingleton<AppSettings>();
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddBlazorise(options =>
+            { 
+                options.ChangeTextOnKeyPress = true;
+            }).AddBootstrapProviders();
             await builder.Build().RunAsync();
         }
     }
